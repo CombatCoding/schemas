@@ -1,0 +1,115 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "VARRT Scenario",
+  "$id": "http://schemas.combatcoding.com/varrt-schema.json",
+  "description": "Schema for VARRT JSON database documents",
+  "type": "object",
+  "definitions": {
+    "scenario": {
+      "type": "object",
+      "properties": {
+        "scenario_name": {
+          "description": "The name of the scenario",
+          "type": "string"
+        },
+        "scenario_description": {
+          "description": "The description of the scenario",
+          "type": "string"
+        }
+      },
+      "required": [
+        "scenario_name",
+        "scenario_description"
+      ]
+    },
+    "position": {
+      "type": "object",
+      "description": "The Latitude and Longitude of the objects position.",
+      "properties": {
+        "latitude": {
+          "description": "The latitude in decimal degrees.",
+          "type": "number"
+        },
+        "longitude": {
+          "description": "The longitude in decimal degrees.",
+          "type": "number"
+        }
+      }
+    },
+    "mil-std-2525": {
+      "type": "string",
+      "format": "([1-3][0-9])([0-2][0-6])(0[1256]|1[015]|2[05]|3[056]|4[0567]|5[0-4]|60|99)([0-5]|9)([0-7]|9)(00|1[1-9]|2([1-6]|9)|3([1-7]|9)|[4-6][129]|99)([0-9]{10})([0-9]{10})?"
+    },
+    "pacing_item": {
+      "description": "An individual item of interest.",
+      "properties": {
+        "id": {
+          "description": "The unique identifier for my object. (A UUID specified by RFC4122).",
+          "type": "string",
+          "pattern": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+        },
+        "amount": {
+          "description": "Quantity",
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "military_unit": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "The unique identifier for my object. (A UUID specified by RFC4122).",
+          "type": "string",
+          "pattern": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+        },
+        "name": {
+          "description": "The human readable name of the military unit.",
+          "type": "string"
+        },
+        "comments": {
+          "description": "Comments about the military unit.",
+          "type": "string"
+        },
+        "position": {
+          "$ref": "#/definitions/position"
+        },
+        "symbol_code": {
+          "$ref": "#/definitions/mil-std-2525"
+        },
+        "hq": {
+          "$ref": "#/definitions/military_unit"
+        },
+        "personnel_amount": {
+          "description": "The total number of individuals that make up the unit.",
+          "type": "integer"
+        },
+        "pacing_items": {
+          "description": "The items deemed worthy of tracking",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/pacing_item"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "pacing_items",
+        "personnel_amount",
+        "symbol_code"
+      ]
+    }
+  },
+  "properties": {
+    "info": {
+      "$ref": "#/definitions/scenario"
+    },
+    "units": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/military_unit"
+      }
+    }
+  }
+}
